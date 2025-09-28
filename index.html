@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма с данными</title>
+    <title>Форма с EmailJS</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,18 +33,37 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
         }
         button:hover {
             background: #0056b3;
         }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .loading {
+            display: none;
+            color: #007bff;
+        }
+        .success {
+            color: green;
+            display: none;
+        }
+        .error {
+            color: red;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Заполните форму</h1>
-    <form action="mail.php" method="POST" enctype="multipart/form-data">
+    <h1>📧 Форма с отправкой на Email</h1>
+
+    <!-- Форма -->
+    <form id="contact-form">
         <!-- Любимая еда -->
         <div class="form-group">
-            <label for="food">Любимая еда:</label>
+            <label for="food">🍕 Любимая еда:</label>
             <select id="food" name="food" required>
                 <option value="">-- Выберите еду --</option>
                 <option value="pizza">Пицца</option>
@@ -58,46 +77,131 @@
 
         <!-- Имя -->
         <div class="form-group">
-            <label for="name">Ваше имя:</label>
+            <label for="name">👤 Ваше имя:</label>
             <input type="text" id="name" name="name" required placeholder="Введите ваше имя">
         </div>
 
         <!-- Сообщение авторизации -->
         <div class="form-group">
-            <label for="auth_msg">Сообщение авторизации (auth_msg):</label>
+            <label for="auth_msg">🔐 Сообщение авторизации:</label>
             <input type="text" id="auth_msg" name="auth_msg" required placeholder="Сообщение для авторизации">
         </div>
 
         <!-- Пароль -->
         <div class="form-group">
-            <label for="password">Пароль:</label>
+            <label for="password">🔒 Пароль:</label>
             <input type="password" id="password" name="password" required placeholder="Введите пароль">
         </div>
 
         <!-- Качества -->
         <div class="form-group">
-            <label for="cachestva">Ваши качества:</label>
+            <label for="cachestva">⭐ Ваши качества:</label>
             <textarea id="cachestva" name="cachestva" rows="4" placeholder="Опишите ваши качества..."></textarea>
         </div>
 
         <!-- Зарплата -->
         <div class="form-group">
-            <label for="zp">Желаемая зарплата (₽):</label>
+            <label for="zp">💰 Желаемая зарплата (₽):</label>
             <input type="number" id="zp" name="zp" min="0" step="1000" placeholder="Введите желаемую зарплату">
         </div>
 
-        <!-- Изображение -->
-        <div class="form-group">
-            <label for="img">Загрузите изображение:</label>
-            <input type="file" id="img" name="img" accept="image/*">
-        </div>
+        <!-- Кнопка отправки -->
+        <button type="submit" id="submit-btn">
+            📤 Отправить данные
+        </button>
 
-        <button type="submit">Отправить данные</button>
+        <!-- Индикатор загрузки -->
+        <div id="loading" class="loading">
+            ⏳ Отправка данных...
+        </div>
     </form>
+
+    <!-- Сообщения -->
+    <div id="success-message" class="success">
+        ✅ Данные успешно отправлены! Проверьте ваш email.
+    </div>
+
+    <div id="error-message" class="error">
+        ❌ Ошибка при отправке. Попробуйте еще раз.
+    </div>
+
+    <!-- Подключаем EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // Инициализация EmailJS
+        // ЗАМЕНИТЕ
+        'your_public_key' на ваш настоящий Public Key
+        emailjs.init('IbXLsF7-V2GK-p_ru');
+
+        // Обработчик отправки формы
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Отменяем стандартную отправку
+            
+            // Показываем индикатор загрузки
+            const submitBtn = document.getElementById('submit-btn');
+            const loading = document.getElementById('loading');
+            const success = document.getElementById('success-message');
+            const error = document.getElementById('error-message');
+            
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            success.style.display = 'none';
+            error.style.display = 'none';
+
+            // Собираем данные формы
+            const formData = {
+                food: document.getElementById('food').value,
+                name: document.getElementById('name').value,
+                auth_msg: document.getElementById('auth_msg').value,
+                password: document.getElementById('password').value,
+                cachestva: document.getElementById('cachestva').value,
+                zp: document.getElementById('zp').value,
+                timestamp: new Date().toLocaleString('ru-RU'),
+                ip: 'недоступно в браузере' // IP можно получить через дополнительный сервис
+            };
+
+            // Отправка через EmailJS
+            // ЗАМЕНИТЕ 'your_service_id' и 'your_template_id' на ваши настоящие ID
+            emailjs.send('service_02kbbyh', 'template_e7mf4qm', formData)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    
+                    // Показываем успех
+                    success.style.display = 'block';
+                    loading.style.display = 'none';
+                    
+                    // Очищаем форму
+                    document.getElementById('contact-form').reset();
+                    
+                    // Восстанавливаем кнопку через 3 секунды
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                    }, 3000);
+                    
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Показываем ошибку
+                    error.style.display = 'block';
+                    loading.style.display = 'none';
+                    submitBtn.disabled = false;
+                });
+        });
+
+        // Валидация в реальном времени
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('blur', function() {
+                if (!this.value && this.hasAttribute('required')) {
+                    this.style.borderColor = 'red';
+                } else {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-
-
 
 
 
