@@ -1,55 +1,102 @@
-<!doctype html>
-<html>
-<head><title>формы</title></head>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма с данными</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
 <body>
-<form action="main.php" method="POST">
-<p>Выбери свою любимую еду</p>
-<select name="Любимая еда">
-<option value="1">Спагетти</option>
-<option value="2">Пюре</option>
-<option value="3">Гречка</option>
-<option value="4">Манная каша</option>
-<option value="5">Блины</option>
-<option value="6">Мороженое</option>
-<option value="7">Пельмени</option>
-<option value="8">Овсяная каша</option>
-<option value="9">Каша дружба</option>
-<option value="10">Бургер</option>
-<option value="11">Сало</option>
-<option value="12">Бутерброд</option>
-<option value="13">Суп</option>
-<option value="14">Мясо</option>
-</select>
-<p>Твоё имя: 
-<input type="text" name="Твоё имя"></p>
-<p>Напиши<br> что-нибудь<br> о себе:<br>
-<textarea name = "auth_msg" rows = "7" cols = "25"></textarea><br>
-<p>Придумай пароль: 
-<input type="password" name="password"></p>
-<p>Выбери свои качества:</p>
-<label><input type="checkbox" name="cachestva" value="Терпеливый"> Терпеливый</label><br>
-    <label><input type="checkbox" name="cachestva" value="Умный"> Умный</label><br>
-    <label><input type="checkbox" name="cachestva" value="Находчивый"> Находчивый</label><br>
-    <label><input type="checkbox" name="cachestva" value="Топовый программист"> Топовый программист</label><br>
-<p>Выбери свою будущую зарплату: </p>
-<input type="radio" name="zp" value="1">30-45к</input>
-<input type="radio" name="zp" value="2">45-60к</input>
-<input type="radio" name="zp" value="3">60-80к</input>
-<input type="radio" name="zp" value="4">80-120к</input>
-<input type="radio" name="zp" value="5">120к+</input>
-<p>Выбери понравшееся фото: </p>
-<p><input type="radio" name="img" value="1"><img src="https://i.pinimg.com/736x/74/bd/c4/74bdc460b88ea2cb556ab32b383c7c41.jpg" width="100"></input>
-<input type="radio" name="img" value="2"><img src="https://i.pinimg.com/originals/7b/19/c3/7b19c32a023ffc937b4cb7ae8cd26839.jpg" width="100"></input>
-<input type="radio" name="img" value="3"><img src="https://image.winudf.com/v2/image1/Y29tLmJvcmEubWhvdXNjcmFmX3NjcmVlbl8zXzE1ODI3NDA1ODZfMDcy/screen-3.jpg?fakeurl=1&type=.jpg" width="100"></input></p>
-<p> <input type="radio" name="img" value="4"><img src="https://image.winudf.com/v2/image1/Y29tLmJ1aWxkY3JhZnQuY3JhZnRpbmcuYnVpbGRpbmcuaW9uaXFfc2NyZWVuXzFfMTY2OTY2NTYwNV8wODI/screen-1.jpg?fakeurl=1&type=.jpg" width="100"></input>
-<input type="radio" name="img" value="4"><img src="https://i.pinimg.com/originals/e9/a7/06/e9a706a4d905292df0e37e739144a3e4.jpg" width="100"></input>
- <input type="radio" name="img" value="4"><img src="https://i.redd.it/zzzktmojyon41.png" width="100"></input>
+    <h1>Заполните форму</h1>
+    <form action="mail.php" method="POST" enctype="multipart/form-data">
+        <!-- Любимая еда -->
+        <div class="form-group">
+            <label for="food">Любимая еда:</label>
+            <select id="food" name="food" required>
+                <option value="">-- Выберите еду --</option>
+                <option value="pizza">Пицца</option>
+                <option value="sushi">Суши</option>
+                <option value="burger">Бургер</option>
+                <option value="pasta">Паста</option>
+                <option value="salad">Салат</option>
+                <option value="other">Другое</option>
+            </select>
+        </div>
 
-<button type="submit">Отправить</button>
-</select>
-</form>
+        <!-- Имя -->
+        <div class="form-group">
+            <label for="name">Ваше имя:</label>
+            <input type="text" id="name" name="name" required placeholder="Введите ваше имя">
+        </div>
+
+        <!-- Сообщение авторизации -->
+        <div class="form-group">
+            <label for="auth_msg">Сообщение авторизации (auth_msg):</label>
+            <input type="text" id="auth_msg" name="auth_msg" required placeholder="Сообщение для авторизации">
+        </div>
+
+        <!-- Пароль -->
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required placeholder="Введите пароль">
+        </div>
+
+        <!-- Качества -->
+        <div class="form-group">
+            <label for="cachestva">Ваши качества:</label>
+            <textarea id="cachestva" name="cachestva" rows="4" placeholder="Опишите ваши качества..."></textarea>
+        </div>
+
+        <!-- Зарплата -->
+        <div class="form-group">
+            <label for="zp">Желаемая зарплата (₽):</label>
+            <input type="number" id="zp" name="zp" min="0" step="1000" placeholder="Введите желаемую зарплату">
+        </div>
+
+        <!-- Изображение -->
+        <div class="form-group">
+            <label for="img">Загрузите изображение:</label>
+            <input type="file" id="img" name="img" accept="image/*">
+        </div>
+
+        <button type="submit">Отправить данные</button>
+    </form>
 </body>
 </html>
+
 
 
 
